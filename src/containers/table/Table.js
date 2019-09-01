@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { withStyles } from '@material-ui/styles'
@@ -6,6 +6,8 @@ import { withStyles } from '@material-ui/styles'
 import { FixedSizeList } from 'react-window'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import InfiniteLoader from 'react-window-infinite-loader'
+
+import { Scrollbars } from 'react-custom-scrollbars'
 
 import {
   CircularProgress,
@@ -47,6 +49,32 @@ const TRow = props => {
   }
 return <TableRow component='div' style={styles} {...rest} />
 }
+
+
+const CustomScrollbars = ({ onScroll, forwardedRef, style, children }) => {
+  const refSetter = useCallback(scrollbarsRef => {
+    if (scrollbarsRef) {
+      forwardedRef(scrollbarsRef.view);
+    } else {
+      forwardedRef(null);
+    }
+  }, [forwardedRef]);
+
+  return (
+    <Scrollbars
+      ref={refSetter}
+      style={{ ...style, overflow: "hidden" }}
+      onScroll={onScroll}
+    >
+      {children}
+    </Scrollbars>
+  );
+};
+
+const CustomScrollbarsVirtualList = React.forwardRef((props, ref) => (
+  <CustomScrollbars {...props} forwardedRef={ref} />
+))
+
 class DataTable extends React.Component {
 
 
@@ -124,6 +152,7 @@ class DataTable extends React.Component {
                 itemSize={48}
                 itemCount={itemCount - 1}
                 onItemsRendered={onItemsRendered}
+                outerElementType={CustomScrollbarsVirtualList}
                 ref={ref}>
                 {this.renderRow}
                 </FixedSizeList>
