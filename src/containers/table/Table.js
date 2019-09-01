@@ -38,8 +38,7 @@ const deferable = () => {
 const T = props => <Table component='div' {...props} />
 const THead = props => <TableHead component='div' {...props} />
 const TBody = props => <TableBody component='div' {...props} />
-const TCell = props => <TableCell component='div'
- style={{display:'flex',flexGrow: 1}}{...props}/>
+const TCell = props => <TableCell component='div' style={{display:'flex',flexGrow: 1}}{...props}/>
 const TRow = props => {
   const { style, ...rest } = props
   const styles = {
@@ -81,7 +80,7 @@ class DataTable extends React.Component {
   }
 
   renderRow = ({ index, style }) => {
-    const { data } = this.props
+    const { data, columns } = this.props
     if (index === data.length) {
       return (<TRow style={style}>
         <CircularProgress />
@@ -90,29 +89,22 @@ class DataTable extends React.Component {
     const row = data[index]
     return (
       <TRow style={style}>
-        <TCell>
-          {row.column1}
-        </TCell>
-        <TCell>
-          {row.column2}
-        </TCell>
+         {columns.map(column => <TCell key={column.id}>{column.column(row)}</TCell>)}
       </TRow>)
   }
 
   render () {
-    const { data = [], loadingData, hasMoreData } = this.props
+    const { data = [], columns, loadingData, hasMoreData } = this.props
     const itemCount = hasMoreData ? data.length + 1 : data.length
     const isItemLoaded = index => !hasMoreData || index < data.length
     const loadMoreItems = loadingData ? () => {} : this.loadMoreData
+
+
     return (
       <T>
         <THead>
           <TRow>
-          <TCell>Dessert (100g serving)</TCell>
-            <TCell align="right">Calories</TCell>
-            <TCell align="right">Fat&nbsp;(g)</TCell>
-            <TCell align="right">Carbs&nbsp;(g)</TCell>
-            <TCell align="right">Protein&nbsp;(g)</TCell>
+            {columns.map(column => <TCell key={column.id}>{column.header}</TCell>)}
           </TRow>
         </THead>
         <TBody style={{ width: '100vw', height: '90vh'}}>
@@ -146,6 +138,7 @@ class DataTable extends React.Component {
 }
 
 Table.propTypes = {
+  columns: PropTypes.array,
   data: PropTypes.array,
   hasMoreData: PropTypes.bool,
   loadingData: PropTypes.object,

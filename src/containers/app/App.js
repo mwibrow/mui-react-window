@@ -1,6 +1,6 @@
 import React from 'react'
 import { withStyles } from '@material-ui/styles'
-import { Paper } from '@material-ui/core'
+import { Paper, Typography } from '@material-ui/core'
 
 import Table from '../table/Table'
 
@@ -19,9 +19,27 @@ class App extends React.Component {
 
   render () {
     const { classes } = this.props
+    const columns = [
+      {
+        id: 'column1',
+        column: row => row.column1,
+        header: <Typography variant='caption'>Column1</Typography>
+      },
+      {
+        id: 'column2',
+        column: row => row.column2,
+        header: <Typography variant='caption'>Column2</Typography>
+      },
+      {
+        id: 'column3',
+        column: row => row.column3,
+        header: <Typography variant='caption'>Column3</Typography>
+      },
+
+    ]
     return (
       <Paper className={classes.root}>
-        <Table />
+        <Table columns={columns}/>
       </Paper>
 
     )
