@@ -39,10 +39,15 @@ const T = props => <Table component='div' {...props} />
 const THead = props => <TableHead component='div' {...props} />
 const TBody = props => <TableBody component='div' {...props} />
 const TCell = props => <TableCell component='div'
- {...props}/>
-const TRow = props => <TableRow component='div'
-style={{display:'flex', flexDirection:'row', width: '100%'}} {...props} />
-
+ style={{display:'flex',flexGrow: 1}}{...props}/>
+const TRow = props => {
+  const { style, ...rest } = props
+  const styles = {
+    ...style,
+    display: 'flex', flexDirection: 'row'
+  }
+return <TableRow component='div' style={styles} {...rest} />
+}
 class DataTable extends React.Component {
 
 
@@ -75,7 +80,7 @@ class DataTable extends React.Component {
     return this._defer
   }
 
-  renderRow = ({ index, style}) => {
+  renderRow = ({ index, style }) => {
     const { data } = this.props
     if (index === data.length) {
       return (<TRow style={style}>
@@ -83,7 +88,6 @@ class DataTable extends React.Component {
       </TRow>)
     }
     const row = data[index]
-
     return (
       <TRow style={style}>
         <TCell>
