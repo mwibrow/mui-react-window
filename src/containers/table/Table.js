@@ -1,3 +1,4 @@
+import clsx from "clsx"
 import React, { useCallback } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
@@ -21,7 +22,13 @@ import {
 import { appSelectors as selectors } from "../../store/reducers";
 import { appSagas as sagas } from "../../store/sagas";
 
-const styles = theme => ({});
+const styles = theme => ({
+  cell: {
+    alignItems: "center",
+    boxSizing: "border-box",
+    display: "flex",
+  }
+});
 
 const deferable = () => {
   let resolved, rejected;
@@ -135,19 +142,22 @@ class DataTable extends React.Component {
   };
 
   renderCell(column, content) {
+    const { classes } = this.props
     const { cellProps = {}, id, width } = column;
     const { style, ...otherProps } = cellProps;
     const cellStyle = {
-      display: "flex",
       flexGrow: width ? 0 : 1,
-      overflow: "hidden",
       ...style
     };
     if (width) {
       cellStyle.width = cellStyle.width = cellStyle.maxWidth = cellStyle.flexBasis = width;
     }
     return (
-      <TCell key={id} style={cellStyle} {...otherProps}>
+      <TCell
+        className={classes.cell}
+        component='div'
+        key={id}
+        style={cellStyle} {...otherProps}>
         {content}
       </TCell>
     );
