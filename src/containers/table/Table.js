@@ -1,3 +1,4 @@
+import clsx from "clsx"
 import React, { useCallback } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
@@ -22,11 +23,22 @@ import { appSelectors as selectors } from "../../store/reducers";
 import { appSagas as sagas } from "../../store/sagas";
 
 const styles = theme => ({
+  root: {},
+  body: {
+    display: "flex",
+  },
   cell: {
     alignItems: "center",
     boxSizing: "border-box",
     display: "flex",
-  }
+  },
+  cellHead: {},
+  head: {},
+  row: {
+    display: "flex",
+    flexDirection: "row",
+  },
+  rowHead: {},
 });
 
 const deferable = () => {
@@ -38,32 +50,6 @@ const deferable = () => {
   promise.resolve = resolved;
   promise.rejected = rejected;
   return promise;
-};
-
-const T = props => <Table component="div" {...props} />;
-const THead = props => (
-  <TableHead
-    component="div"
-    {...props}
-    style={{ boxShadow: "0 -4px 8px black" }}
-  />
-);
-const TBody = props => <TableBody component="div" {...props} />;
-const TCell = props => (
-  <TableCell
-    component="div"
-    style={{ display: "flex", flexGrow: 1 }}
-    {...props}
-  />
-);
-const TRow = props => {
-  const { style, ...rest } = props;
-  const styles = {
-    ...style,
-    display: "flex",
-    flexDirection: "row"
-  };
-  return <TableRow component="div" style={styles} {...rest} />;
 };
 
 const CustomScrollbars = ({ onScroll, forwardedRef, style, children }) => {
@@ -124,23 +110,31 @@ class DataTable extends React.Component {
   };
 
   renderRow = ({ index, style }) => {
-    const { data, columns } = this.props;
+    const { data, classes, columns } = this.props;
     if (index === data.length) {
       return (
-        <TRow style={style}>
+        <TableRow
+          className={classes.row}
+          component="div"
+          style={style}
+        >
           <CircularProgress />
-        </TRow>
+        </TableRow>
       );
     }
     const row = data[index];
     return (
-      <TRow style={style}>
+      <TableRow
+        className={classes.row}
+        component="div"
+        style={style}
+      >
         {columns.map(column => this.renderCell(column, column.cell(row)))}
-      </TRow>
+      </TableRow>
     );
   };
 
-  renderCell(column, content) {
+  renderCell(column, content, header) {
     const { classes } = this.props
     const { cellProps = {}, id, width } = column;
     const { style, ...otherProps } = cellProps;
@@ -152,19 +146,21 @@ class DataTable extends React.Component {
       cellStyle.width = cellStyle.width = cellStyle.maxWidth = cellStyle.flexBasis = width;
     }
     return (
-      <TCell
-        className={classes.cell}
+      <TableCell
+        className={clsx(classes.cell, {[classes.cellHead]: header})}
         component='div'
         key={id}
-        style={cellStyle} {...otherProps}>
+        style={cellStyle} {...otherProps}
+      >
         {content}
-      </TCell>
+      </TableCell>
     );
   }
 
   render() {
     const {
       data = [],
+      classes,
       columns,
       loadingData,
       hasMoreData,
@@ -177,15 +173,16 @@ class DataTable extends React.Component {
     return (
       <AutoSizer>
         {({ width, height }) => (
-          <T>
-            <THead>
-              <TRow>
-                {columns.map(column => this.renderCell(column, column.header))}
-              </TRow>
-            </THead>
-            <TBody
+          <Table className={classes.root} component="div">
+            <TableHead className={classes.head} component="div">
+              <TableRow className={clsx(classes.row, classes.rowHead)} component="div">
+                {columns.map(column => this.renderCell(column, column.header, true))}
+              </TableRow>
+            </TableHead>
+            <TableBody
+              className={classes.body}
+              component="div"
               style={{
-                display: "flex",
                 width: width,
                 height: height - rowHeight
               }}
@@ -209,8 +206,8 @@ class DataTable extends React.Component {
                   </FixedSizeList>
                 )}
               </InfiniteLoader>
-            </TBody>
-          </T>
+            </TableBody>
+          </Table>
         )}
       </AutoSizer>
     );

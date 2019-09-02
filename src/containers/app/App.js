@@ -38,7 +38,7 @@ class App extends React.Component {
       }
     ];
     return (
-      <Paper className={classes.root}>
+      <Paper square className={classes.root}>
         <Table columns={columns} />
       </Paper>
     );
