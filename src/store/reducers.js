@@ -1,3 +1,3 @@
-import app, * as appSelectors from './app/reducer'
+import app, * as appSelectors from "./app/reducer";
 
-export { app, appSelectors }
+export { app, appSelectors };
