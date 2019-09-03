@@ -79,7 +79,7 @@ const CustomScrollbarsVirtualList = React.forwardRef((props, ref) => (
   <CustomScrollbars {...props} forwardedRef={ref} />
 ));
 
-class DataTable extends React.Component {
+class MuiVirtualizedTable extends React.Component {
   constructor(props) {
     super(props);
     this._defer = null;
@@ -214,7 +214,7 @@ class DataTable extends React.Component {
   }
 }
 
-Table.propTypes = {
+MuiVirtualizedTable.propTypes = {
   columns: PropTypes.array,
   data: PropTypes.array,
   rowHeight: PropTypes.number,
@@ -236,4 +236,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withStyles(styles)(DataTable));
+)(withStyles(styles)(MuiVirtualizedTable));
