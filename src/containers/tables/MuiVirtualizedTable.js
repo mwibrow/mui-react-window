@@ -69,6 +69,7 @@ const CustomScrollbars = ({ onScroll, forwardedRef, style, children }) => {
       ref={refSetter}
       style={{ ...style, overflow: "hidden" }}
       onScroll={onScroll}
+      autoHide
     >
       {children}
     </Scrollbars>
@@ -148,7 +149,7 @@ class MuiVirtualizedTable extends React.Component {
     return (
       <TableCell
         className={clsx(classes.cell, {[classes.cellHead]: header})}
-        component='div'
+        component="div"
         key={id}
         style={cellStyle} {...otherProps}
       >

@@ -2,7 +2,7 @@ import React from "react";
 import { withStyles } from "@material-ui/styles";
 import { Paper, Typography } from "@material-ui/core";
 
-import Table from "../table/Table";
+import Table from "../tables/MuiVirtualizedTable";
 
 const styles = theme => ({
   root: {
