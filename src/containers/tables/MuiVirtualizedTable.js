@@ -52,6 +52,9 @@ const deferable = () => {
   return promise;
 };
 
+/*
+  See https://github.com/bvaughn/react-window/issues/110#issuecomment-469061213
+*/
 const CustomScrollbars = ({ onScroll, forwardedRef, style, children }) => {
   const refSetter = useCallback(
     scrollbarsRef => {
